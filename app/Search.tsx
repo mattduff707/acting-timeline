@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import React, { ChangeEventHandler, useState } from 'react';
 const Search = () => {
   const [loading, setLoading] = useState(false);
@@ -24,17 +25,19 @@ const Search = () => {
       {showResults && (
         <ul className="list-none bg-slate-300 w-full m-0 absolute max-h-[600px] overflow-auto">
           {results.map((actor: any) => (
-            <li className="p-2 flex items-center gap-4 hover:bg-slate-400 cursor-pointer" key={actor.id}>
-              {actor.profile_path ? (
-                <img
-                  className="w-20 h-32"
-                  src={`https://image.tmdb.org/t/p/original${actor.profile_path}`}
-                  alt={`headshot of ${actor.name}`}
-                />
-              ) : (
-                <div className="flex items-center w-20 h-32 bg-slate-400 opacity-70 px-4 text-center">No Picture</div>
-              )}
-              {actor.name}
+            <li className="hover:bg-slate-400 cursor-pointer" key={actor.id}>
+              <Link className="p-2 flex items-center gap-4 " href={`/${actor.id}`}>
+                {actor.profile_path ? (
+                  <img
+                    className="w-20 h-32"
+                    src={`https://image.tmdb.org/t/p/original${actor.profile_path}`}
+                    alt={`headshot of ${actor.name}`}
+                  />
+                ) : (
+                  <div className="flex items-center w-20 h-32 bg-slate-400 opacity-70 px-4 text-center">No Picture</div>
+                )}
+                {actor.name}
+              </Link>
             </li>
           ))}
         </ul>

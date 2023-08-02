@@ -7,8 +7,7 @@ export default async function Home() {
 
   // console.log(data);
   return (
-    <main className="flex flex-col h-full">
-      <Header />
+    <main className="">
       <Timeline />
     </main>
   );
