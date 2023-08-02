@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  header,
-  timeline,
 }: {
   children: React.ReactNode;
   header: React.ReactNode;
@@ -20,10 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {header}
-        {timeline}
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
