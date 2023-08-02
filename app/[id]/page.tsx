@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
   params: {
@@ -6,9 +6,22 @@ interface Props {
   };
 }
 
-const Actor = ({ params }: { params: Props }) => {
-  console.log(params);
-  return <div>page</div>;
+const Actor = async ({ params }: Props) => {
+  const actorRes = await fetch(
+    `http://localhost:3000/api/actor/${params.id}/details`,
+    {
+      method: "GET",
+    }
+  );
+  const actor = await actorRes.json();
+
+  console.log(actor);
+
+  // const creditsRes = await fetch(
+  //   `http://localhost:3000/api/actor/${params.id}/credits`
+  // );
+
+  return <section className="flex-1 bg-slate-800 py-10">page</section>;
 };
 
 export default Actor;

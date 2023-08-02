@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Timeline = () => {
-  return <section className="flex-1 bg-slate-800"></section>;
+  return <section className="h-full bg-slate-800">Timeline</section>;
 };
 
 export default Timeline;
