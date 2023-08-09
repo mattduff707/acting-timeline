@@ -7,7 +7,6 @@ async function getData(id: string) {
     cache: 'no-cache',
   });
   if (!res.ok) {
-    console.log('WHATTTTTTTTTTTTTTTTTTTTTTTT');
     throw new Error('Failed to fetch data');
   }
 
@@ -20,7 +19,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
     return data;
   } catch (error) {
-    console.log('ERRROR HANDLERRRRRRRRRRRRRRRRRRRR');
     console.log(error);
   }
 }

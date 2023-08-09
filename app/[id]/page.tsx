@@ -1,5 +1,6 @@
 import React from 'react';
 import Timeline from '../../components/Timeline';
+import { getYear } from 'date-fns';
 
 interface Props {
   params: {
@@ -14,7 +15,7 @@ const Actor = async ({ params }: Props) => {
   });
   const actor = await actorRes.json();
   const years = actor.movie_credits.cast.reduce((acc: any, movie: any) => {
-    const year = parseInt(movie.release_date.split('-')[0]);
+    const year = getYear(new Date(movie.release_date));
     if (!acc.includes(year) && !isNaN(year)) {
       return [...acc, year];
     }
@@ -23,19 +24,21 @@ const Actor = async ({ params }: Props) => {
   }, []);
 
   const sortedYears = years.sort();
+
   const ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const points = actor.movie_credits.cast
     .map((movie: any) => {
-      const year = parseInt(movie.release_date.split('-')[0]);
+      const date = new Date(movie.release_date);
       const rating = movie.vote_average;
-      if (isNaN(year)) {
+
+      if (date.toString() === 'Invalid Date') {
         return null;
       }
 
       return {
-        x: year,
+        x: date,
         y: rating,
-        label: movie.title,
+        label: `${movie.rating} - ${movie.title}`,
       };
     })
     .filter((point: any) => point !== null);
