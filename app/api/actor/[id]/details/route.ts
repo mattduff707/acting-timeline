@@ -4,7 +4,7 @@ async function getData(id: string) {
   const res = await fetch(`https://api.themoviedb.org/3/person/287?append_to_response=movie_credits`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}` },
-    cache: 'no-cache',
+    // cache: 'no-cache',
   });
   if (!res.ok) {
     throw new Error('Failed to fetch data');

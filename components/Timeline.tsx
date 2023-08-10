@@ -104,7 +104,8 @@ const Timeline = ({ x, y, points }: Props) => {
           ? { style: 'solid', width: '2px', color: 'rgb(71,85,105)' }
           : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
 
-        const isTopHalf = yIdx < Math.floor(yArr.length / 2);
+        const isBottomHalf = yIdx > Math.floor(yArr.length / 2);
+        const isNearEnd = xIdx > xArr.length - Math.floor(xArr.length / 4);
 
         return (
           <div
@@ -130,9 +131,11 @@ const Timeline = ({ x, y, points }: Props) => {
             }}
             className="border-slate-500 text-white relative"
           >
-            {pointsWithPosition.map((point) => {
+            {pointsWithPosition.map((point, idx, pointArr) => {
               const bottom = `calc(${point.bottom}% - 6px)`;
               const left = `calc(${point.left}% - 6px)`;
+              const transform = `translate(${isNearEnd ? '-100%' : '0%'}, ${isBottomHalf ? '-100%' : '0%'})`;
+
               return (
                 <div
                   className="absolute w-[12px] h-[12px]"
@@ -141,17 +144,13 @@ const Timeline = ({ x, y, points }: Props) => {
                 >
                   <div
                     key={`${point.x}-${point.y}`}
-                    className="relative w-[12px] h-[12px] rounded-full bg-red-400 peer z-[11]"
-                  ></div>
-                  <div
-                    style={{
-                      bottom,
-                      left: `calc(${point.left}% + 12px)`,
-                      transform: isTopHalf ? 'translateY(calc(100% - 12px))' : '',
-                    }}
-                    className="w-0 h-0 overflow-hidden absolute opacity-0 hover:opacity-100 hover:w-[fit-content] hover:h-[fit-content] peer-hover:opacity-100 peer-hover:w-[fit-content] peer-hover:h-[fit-content] transition-opacity duration-200 ease-in-out z-[12]"
+                    // Adjust top/left value if transformed
+                    // style={{ transform: isBottomHalf ? 'translateY(-100%)' : 'translateY(0%)' }}
+                    className="group relative w-[12px] h-[12px] rounded-[50%] border-red-400 border-[6px] hover:w-[320px] hover:h-[200px] hover:z-[100] hover:rounded-[4px] z-[12] overflow-hidden hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease] [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease]"
                   >
-                    {point.hoverComponent}
+                    <div className="z-[11] bg-slate-800 [&>*:first-child]:transition-opacity [&>*:first-child]:delay-0 [&>*:first-child]:duration-[0.4s] [&>*:first-child]:opacity-0 group-hover:[&>*:first-child]:opacity-100 group-hover:[&>*:first-child]:delay-[0.2s]">
+                      {point.hoverComponent}
+                    </div>
                   </div>
                 </div>
               );
@@ -163,7 +162,7 @@ const Timeline = ({ x, y, points }: Props) => {
     });
 
   return (
-    <div className="h-full grid w-[fit-content] grid-cols-[120px_1fr] grid-rows-[1fr_120px] pt-8 pr-20 text-slate-300">
+    <div className="h-full grid w-[fit-content] grid-cols-[120px_1fr] grid-rows-[1fr_120px] pt-8 pr-20 text-slate-300 isolate">
       <div className="sticky left-0 border-r-[5px] bg-slate-800 border-slate-500 pr-2 z-20">
         <div className="relative h-full">
           {y
