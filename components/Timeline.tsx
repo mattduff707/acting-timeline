@@ -5,7 +5,7 @@ import React from 'react';
 interface Point {
   x: number;
   y: number;
-  label: string;
+  hoverComponent: React.ReactElement;
 }
 
 interface Props {
@@ -104,6 +104,8 @@ const Timeline = ({ x, y, points }: Props) => {
           ? { style: 'solid', width: '2px', color: 'rgb(71,85,105)' }
           : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
 
+        const isTopHalf = yIdx < Math.floor(yArr.length / 2);
+
         return (
           <div
             key={`${xIdx}-${yIdx}`}
@@ -129,12 +131,29 @@ const Timeline = ({ x, y, points }: Props) => {
             className="border-slate-500 text-white relative"
           >
             {pointsWithPosition.map((point) => {
+              const bottom = `calc(${point.bottom}% - 6px)`;
+              const left = `calc(${point.left}% - 6px)`;
               return (
                 <div
-                  key={`${point.x}-${point.y}-${point.label}`}
-                  className="w-[12px] h-[12px] rounded-full bg-red-400 absolute z-[19]"
-                  style={{ bottom: `calc(${point.bottom}% - 6px)`, left: `calc(${point.left}% - 6px)` }}
-                ></div>
+                  className="absolute w-[12px] h-[12px]"
+                  style={{ bottom, left }}
+                  key={`${point.x}-${point.y}-${yIdx}-${xIdx}`}
+                >
+                  <div
+                    key={`${point.x}-${point.y}`}
+                    className="relative w-[12px] h-[12px] rounded-full bg-red-400 peer z-[11]"
+                  ></div>
+                  <div
+                    style={{
+                      bottom,
+                      left: `calc(${point.left}% + 12px)`,
+                      transform: isTopHalf ? 'translateY(calc(100% - 12px))' : '',
+                    }}
+                    className="w-0 h-0 overflow-hidden absolute opacity-0 hover:opacity-100 hover:w-[fit-content] hover:h-[fit-content] peer-hover:opacity-100 peer-hover:w-[fit-content] peer-hover:h-[fit-content] transition-opacity duration-200 ease-in-out z-[12]"
+                  >
+                    {point.hoverComponent}
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -167,7 +186,7 @@ const Timeline = ({ x, y, points }: Props) => {
       <div style={{ width, gridTemplateColumns: columns, gridTemplateRows: rows }} className={`h-full grid`}>
         {boxes.flat().map((box) => box)}
       </div>
-      <div className="bg-gradient-to-r from-slate-800 to-transparent sticky left-0 z-10" />
+      <div className="bg-gradient-to-r from-slate-800 to-transparent sticky left-0 z-[13] border-t-8 border-slate-800" />
       <div className="relative pt-2">
         {x.map((xVal, idx, arr) => {
           const left = `${idx * 140}px`;

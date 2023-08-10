@@ -1,6 +1,7 @@
 import React from 'react';
 import Timeline from '../../components/Timeline';
 import { getYear } from 'date-fns';
+import MovieTooltip from '@/components/MovieTooltip';
 
 interface Props {
   params: {
@@ -38,7 +39,7 @@ const Actor = async ({ params }: Props) => {
       return {
         x: date,
         y: rating,
-        label: `${movie.rating} - ${movie.title}`,
+        hoverComponent: <MovieTooltip movie={movie} />,
       };
     })
     .filter((point: any) => point !== null);
