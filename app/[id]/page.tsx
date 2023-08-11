@@ -46,7 +46,7 @@ const Actor = async ({ params }: Props) => {
 
   return (
     <section className="flex-1 bg-slate-800 overflow-auto">
-      <Timeline points={points} x={sortedYears} y={ratings} />
+      <Timeline points={points} x={sortedYears} y={ratings} xLabel="Release Date" yLabel="Rating" />
     </section>
   );
 };

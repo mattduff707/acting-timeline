@@ -12,9 +12,11 @@ interface Props {
   y: number[];
   x: number[];
   points: Point[];
+  xLabel: string;
+  yLabel: string;
 }
 
-const Timeline = ({ x, y, points }: Props) => {
+const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
   const width = `${x.length * 140}px`;
   const columns = `repeat(${x.length}, minmax(0, 1fr))`;
   const rows = `repeat(${y.length - 1}, minmax(0, 1fr))`;
@@ -187,6 +189,9 @@ const Timeline = ({ x, y, points }: Props) => {
                 </div>
               );
             })}
+          <div className="absolute top-[50%] left-[20px] translate-y-[-50%] text-3xl [writing-mode:vertical-rl] [text-orientation:upright] tracking-[-0.65rem] ">
+            {yLabel}
+          </div>
         </div>
       </div>
       <div style={{ width, gridTemplateColumns: columns, gridTemplateRows: rows }} className={`h-full grid`}>
@@ -203,6 +208,7 @@ const Timeline = ({ x, y, points }: Props) => {
             </div>
           );
         })}
+        <div className="sticky left-[50%] translate-x-[-50%] w-fit h-full flex items-end pb-6 text-3xl">{xLabel}</div>
       </div>
       <div className="sticky right-0 bg-gradient-to-r from-transparent to-slate-800 z-[30]"></div>
     </div>
