@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import Image from 'next/image';
 import React from 'react';
 
 const MovieTooltip = ({ movie }: { movie: any }) => {
@@ -9,7 +11,13 @@ const MovieTooltip = ({ movie }: { movie: any }) => {
       <div className="flex gap-2 h-full">
         <div className="grid place-items-center flex-[1]">
           {movie.poster_path ? (
-            <img className="w-[100px] h-auto" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt="" />
+            <Image
+              width="96"
+              height="144"
+              className="object-cover w-[96px] h-[144px]"
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt=""
+            />
           ) : (
             <div className="w-[96px] h-[144px] bg-slate-800 grid place-items-center text-center">
               No
@@ -23,7 +31,7 @@ const MovieTooltip = ({ movie }: { movie: any }) => {
             <span className="font-bold">Character:</span> {movie.character}
           </p>
           <p>
-            <span className="font-bold">Release:</span> {movie.release_date}
+            <span className="font-bold">Release:</span> {format(new Date(movie.release_date), 'MM/dd/yyyy')}
           </p>
           <p>
             <span className="font-bold">Rating:</span> {movie.vote_average}
