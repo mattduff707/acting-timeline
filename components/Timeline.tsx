@@ -171,7 +171,10 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
     });
 
   return (
-    <div className="h-full grid w-[fit-content] grid-cols-[120px_1fr_120px] grid-rows-[1fr_120px] pt-8 pr-20 text-slate-300 isolate">
+    <div className="h-full grid w-[fit-content] grid-cols-[120px_1fr_120px] grid-rows-[20px_1fr_120px] pt-8 pr-20 text-slate-300 isolate">
+      <div className="bg-slate-800 sticky left-0 z-[19]"></div>
+      <div></div>
+      <div></div>
       <div className="sticky left-0 border-r-[5px] bg-slate-800 border-slate-500 pr-2 z-20">
         <div className="relative h-full">
           {y
