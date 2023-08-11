@@ -138,7 +138,9 @@ const Timeline = ({ x, y, points }: Props) => {
             {pointsWithPosition.map((point, idx, pointArr) => {
               const bottom = `calc(${point.bottom}% - 6px)`;
               const left = `calc(${point.left}% - 6px)`;
-              const transform = `translate(${isNearEnd ? '-100%' : '0%'}, ${isBottomHalf ? '-100%' : '0%'})`;
+              const transform = `translate(${isNearEnd ? 'calc(-100% + 12px)' : '0%'}, ${
+                isBottomHalf ? 'calc(-100% + 12px)' : '0%'
+              })`;
 
               return (
                 <div
@@ -149,6 +151,7 @@ const Timeline = ({ x, y, points }: Props) => {
                   <div
                     key={`${point.x}-${point.y}`}
                     // Adjust top/left value if transformed
+                    style={{ transform }}
                     // style={{ transform: isBottomHalf ? 'translateY(-100%)' : 'translateY(0%)' }}
                     className="group relative w-[12px] h-[12px] rounded-[50%] border-red-400 border-[6px] hover:w-[340px] hover:h-[240px] hover:z-[100] hover:rounded-[4px] z-[12] overflow-hidden hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease] [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease]"
                   >

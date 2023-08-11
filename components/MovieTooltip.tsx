@@ -8,7 +8,15 @@ const MovieTooltip = ({ movie }: { movie: any }) => {
       </header>
       <div className="flex gap-2 h-full">
         <div className="grid place-items-center flex-[1]">
-          <img className="w-[100px] h-auto" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt="" />
+          {movie.poster_path ? (
+            <img className="w-[100px] h-auto" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt="" />
+          ) : (
+            <div className="w-[96px] h-[144px] bg-slate-800 grid place-items-center text-center">
+              No
+              <br />
+              Poster
+            </div>
+          )}
         </div>
         <div className="flex-[2] flex flex-col justify-center">
           <p>
