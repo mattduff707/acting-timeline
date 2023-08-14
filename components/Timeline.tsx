@@ -1,6 +1,6 @@
-'use client';
-import { differenceInDays, getDaysInYear, getYear, isSameYear } from 'date-fns';
-import React from 'react';
+"use client";
+import { differenceInDays, getDaysInYear, getYear, isSameYear } from "date-fns";
+import React from "react";
 
 interface Point {
   x: number;
@@ -21,47 +21,50 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
   const columns = `repeat(${x.length}, minmax(0, 1fr))`;
   const rows = `repeat(${y.length - 1}, minmax(0, 1fr))`;
 
-  const pointsByYear = points.reduce((acc: { [key: number]: { [key: number]: any[] } }, point) => {
-    const year = getYear(point.x);
+  const pointsByYear = points.reduce(
+    (acc: { [key: number]: { [key: number]: any[] } }, point) => {
+      const year = getYear(point.x);
 
-    const idxOfY = y.findIndex((yVal) => point.y <= yVal);
+      const idxOfY = y.findIndex((yVal) => point.y <= yVal);
 
-    if (idxOfY === -1) {
-      console.log('Value omitted: ' + point.y);
-      return acc;
-    }
+      if (idxOfY === -1) {
+        console.log("Value omitted: " + point.y);
+        return acc;
+      }
 
-    const category = idxOfY !== 0 ? y[idxOfY - 1] : y[idxOfY];
+      const category = idxOfY !== 0 ? y[idxOfY - 1] : y[idxOfY];
 
-    //if idx is 0 then do not subtract
+      //if idx is 0 then do not subtract
 
-    if (!acc[year]) {
-      return {
-        ...acc,
-        [year]: {
-          [category]: [point],
-        },
-      };
-    }
+      if (!acc[year]) {
+        return {
+          ...acc,
+          [year]: {
+            [category]: [point],
+          },
+        };
+      }
 
-    if (!acc[year][category]) {
+      if (!acc[year][category]) {
+        return {
+          ...acc,
+          [year]: {
+            ...acc[year],
+            [category]: [point],
+          },
+        };
+      }
+
       return {
         ...acc,
         [year]: {
           ...acc[year],
-          [category]: [point],
+          [category]: [...acc[year][category], point],
         },
       };
-    }
-
-    return {
-      ...acc,
-      [year]: {
-        ...acc[year],
-        [category]: [...acc[year][category], point],
-      },
-    };
-  }, {});
+    },
+    {},
+  );
 
   const boxes = y
     .slice()
@@ -98,17 +101,17 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
         const isBorderRight = xIdx === x.length - 1;
 
         const borderLeft = isBorderLeft
-          ? { style: 'solid', width: '0px', color: 'rgb(100,116,139)' }
-          : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
+          ? { style: "solid", width: "0px", color: "rgb(100,116,139)" }
+          : { style: "solid", width: "1px", color: "rgb(71,85,105)" };
         const borderTop = isBorderTop
-          ? { style: 'solid', width: '2px', color: 'rgb(71,85,105)' }
-          : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
+          ? { style: "solid", width: "2px", color: "rgb(71,85,105)" }
+          : { style: "solid", width: "1px", color: "rgb(71,85,105)" };
         const borderBottom = isBorderBottom
-          ? { style: 'solid', width: '5px', color: 'rgb(100,116,139)' }
-          : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
+          ? { style: "solid", width: "5px", color: "rgb(100,116,139)" }
+          : { style: "solid", width: "1px", color: "rgb(71,85,105)" };
         const borderRight = isBorderRight
-          ? { style: 'solid', width: '2px', color: 'rgb(71,85,105)' }
-          : { style: 'solid', width: '1px', color: 'rgb(71,85,105)' };
+          ? { style: "solid", width: "2px", color: "rgb(71,85,105)" }
+          : { style: "solid", width: "1px", color: "rgb(71,85,105)" };
 
         const isBottomHalf = yIdx > Math.floor(yArr.length / 2);
         const isNearEnd = xIdx > xArr.length - Math.floor(xArr.length / 4);
@@ -117,7 +120,7 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
           <div
             key={`${xIdx}-${yIdx}`}
             style={{
-              borderColor: 'rgb(71,85,105)',
+              borderColor: "rgb(71,85,105)",
               //@ts-ignore
               borderLeftStyle: borderLeft.style,
               borderLeftWidth: borderLeft.width,
@@ -135,18 +138,18 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
               borderRightWidth: borderRight.width,
               borderRightColor: borderRight.color,
             }}
-            className="border-slate-500 text-white relative"
+            className="relative border-slate-500 text-white"
           >
             {pointsWithPosition.map((point, idx, pointArr) => {
               const bottom = `calc(${point.bottom}% - 6px)`;
               const left = `calc(${point.left}% - 6px)`;
-              const transform = `translate(${isNearEnd ? 'calc(-100% + 12px)' : '0%'}, ${
-                isBottomHalf ? 'calc(-100% + 12px)' : '0%'
-              })`;
+              const transform = `translate(${
+                isNearEnd ? "calc(-100% + 12px)" : "0%"
+              }, ${isBottomHalf ? "calc(-100% + 12px)" : "0%"})`;
 
               return (
                 <div
-                  className="absolute w-[12px] h-[12px]"
+                  className="absolute h-[12px] w-[12px]"
                   style={{ bottom, left }}
                   key={`${point.x}-${point.y}-${yIdx}-${xIdx}`}
                 >
@@ -155,9 +158,9 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
                     // Adjust top/left value if transformed
                     style={{ transform }}
                     // style={{ transform: isBottomHalf ? 'translateY(-100%)' : 'translateY(0%)' }}
-                    className="group relative w-[12px] h-[12px] rounded-[50%] border-red-400 border-[6px] hover:w-[340px] hover:h-[240px] hover:z-[100] hover:rounded-[4px] z-[12] overflow-hidden hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease] [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease]"
+                    className="group relative z-[12] h-[12px] w-[12px] overflow-hidden rounded-[50%] border-[6px] border-red-400 [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease] hover:z-[100] hover:h-[240px] hover:w-[340px] hover:rounded-[4px] hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease]"
                   >
-                    <div className="z-[11] bg-slate-800 w-full h-full group-hover:[&>*:first-child]:overflow-auto [&>*:first-child]:overflow-hidden [&>*:first-child]:transition-opacity [&>*:first-child]:delay-0 [&>*:first-child]:duration-[0.4s] [&>*:first-child]:opacity-0 group-hover:[&>*:first-child]:opacity-100 group-hover:[&>*:first-child]:delay-[0.5s]">
+                    <div className="z-[11] h-full w-full bg-slate-800 [&>*:first-child]:overflow-hidden [&>*:first-child]:opacity-0 [&>*:first-child]:transition-opacity [&>*:first-child]:delay-0 [&>*:first-child]:duration-[0.4s] group-hover:[&>*:first-child]:overflow-auto group-hover:[&>*:first-child]:opacity-100 group-hover:[&>*:first-child]:delay-[0.5s]">
                       {point.hoverComponent}
                     </div>
                   </div>
@@ -171,11 +174,11 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
     });
 
   return (
-    <div className="h-full grid w-[fit-content] grid-cols-[120px_1fr_120px] grid-rows-[20px_1fr_120px] pt-8 pr-20 text-slate-300 isolate">
-      <div className="bg-slate-800 sticky left-0 z-[19]"></div>
+    <div className="isolate grid h-full w-[fit-content] grid-cols-[120px_1fr_120px] grid-rows-[20px_1fr_120px] pr-20 pt-8 text-slate-300">
+      <div className="sticky left-0 z-[19] bg-slate-800"></div>
       <div></div>
       <div></div>
-      <div className="sticky left-0 border-r-[5px] bg-slate-800 border-slate-500 pr-2 z-20">
+      <div className="sticky left-0 z-20 border-r-[5px] border-slate-500 bg-slate-800 pr-2">
         <div className="relative h-full">
           {y
             .slice()
@@ -185,35 +188,44 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
               return (
                 <div
                   key={yVal}
-                  style={{ top, right: '8px', transform: 'translateY(-50%)' }}
-                  className="absolute text-slate-300 text-xl"
+                  style={{ top, right: "8px", transform: "translateY(-50%)" }}
+                  className="absolute text-xl text-slate-300"
                 >
                   {yVal}
                 </div>
               );
             })}
-          <div className="absolute top-[50%] left-[20px] translate-y-[-50%] text-3xl [writing-mode:vertical-rl] [text-orientation:upright] tracking-[-0.65rem] ">
+          <div className="absolute left-[20px] top-[50%] translate-y-[-50%] text-3xl tracking-[-0.65rem] [text-orientation:upright] [writing-mode:vertical-rl] ">
             {yLabel}
           </div>
         </div>
       </div>
-      <div style={{ width, gridTemplateColumns: columns, gridTemplateRows: rows }} className={`h-full grid`}>
+      <div
+        style={{ width, gridTemplateColumns: columns, gridTemplateRows: rows }}
+        className={`grid h-full`}
+      >
         {boxes.flat().map((box) => box)}
       </div>
-      <div className="sticky right-0 bg-gradient-to-r from-transparent to-slate-800 z-[30]"></div>
-      <div className="bg-gradient-to-r from-slate-800 to-transparent sticky left-0 z-[13] border-t-8 border-slate-800" />
+      <div className="sticky right-0 z-[30] bg-gradient-to-r from-transparent to-slate-800"></div>
+      <div className="sticky left-0 z-[13] border-t-8 border-slate-800 bg-gradient-to-r from-slate-800 to-transparent" />
       <div className="relative pt-2">
         {x.map((xVal, idx, arr) => {
           const left = `${idx * 140}px`;
           return (
-            <div key={xVal} style={{ left }} className="absolute translate-x-[-50%] text-xl">
+            <div
+              key={xVal}
+              style={{ left }}
+              className="absolute translate-x-[-50%] text-xl"
+            >
               {xVal}
             </div>
           );
         })}
-        <div className="sticky left-[50%] translate-x-[-50%] w-fit h-full flex items-end pb-6 text-3xl">{xLabel}</div>
+        <div className="sticky left-[50%] flex h-full w-fit translate-x-[-50%] items-end pb-6 text-3xl">
+          {xLabel}
+        </div>
       </div>
-      <div className="sticky right-0 bg-gradient-to-r from-transparent to-slate-800 z-[30]"></div>
+      <div className="sticky right-0 z-[30] bg-gradient-to-r from-transparent to-slate-800"></div>
     </div>
   );
 };

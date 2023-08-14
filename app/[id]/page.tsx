@@ -1,7 +1,8 @@
-import React from 'react';
-import Timeline from '../../components/Timeline';
-import { getYear } from 'date-fns';
-import MovieTooltip from '@/components/MovieTooltip';
+import React from "react";
+import Timeline from "../../components/Timeline";
+import { getYear } from "date-fns";
+import MovieTooltip from "@/components/MovieTooltip";
+import Overview from "./Overview";
 
 interface Props {
   params: {
@@ -10,10 +11,13 @@ interface Props {
 }
 
 const Actor = async ({ params }: Props) => {
-  const actorRes = await fetch(`http://localhost:3000/api/actor/${params.id}/details`, {
-    method: 'GET',
-    cache: 'no-cache',
-  });
+  const actorRes = await fetch(
+    `http://localhost:3000/api/actor/${params.id}/details`,
+    {
+      method: "GET",
+      cache: "no-cache",
+    },
+  );
   const actor = await actorRes.json();
   const years = actor.movie_credits.cast.reduce((acc: any, movie: any) => {
     const year = getYear(new Date(movie.release_date));
@@ -32,7 +36,7 @@ const Actor = async ({ params }: Props) => {
       const date = new Date(movie.release_date);
       const rating = movie.vote_average;
 
-      if (date.toString() === 'Invalid Date') {
+      if (date.toString() === "Invalid Date") {
         return null;
       }
 
@@ -45,8 +49,15 @@ const Actor = async ({ params }: Props) => {
     .filter((point: any) => point !== null);
 
   return (
-    <section className="flex-1 bg-slate-800 overflow-auto">
-      <Timeline points={points} x={sortedYears} y={ratings} xLabel="Release Date" yLabel="Rating" />
+    <section className="flex flex-1 flex-col overflow-auto bg-slate-800">
+      <Overview actors={[actor]} />
+      <Timeline
+        points={points}
+        x={sortedYears}
+        y={ratings}
+        xLabel="Release Date"
+        yLabel="Rating"
+      />
     </section>
   );
 };
