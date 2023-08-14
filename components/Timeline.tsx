@@ -6,6 +6,7 @@ interface Point {
   x: number;
   y: number;
   hoverComponent: React.ReactElement;
+  color: string;
 }
 
 interface Props {
@@ -151,14 +152,14 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
                 <div
                   className="absolute h-[12px] w-[12px]"
                   style={{ bottom, left }}
-                  key={`${point.x}-${point.y}-${yIdx}-${xIdx}`}
+                  key={`${point.x}-${point.y}-${yIdx}-${xIdx}-${idx}`}
                 >
                   <div
                     key={`${point.x}-${point.y}`}
                     // Adjust top/left value if transformed
-                    style={{ transform }}
+                    style={{ transform, borderColor: point.color }}
                     // style={{ transform: isBottomHalf ? 'translateY(-100%)' : 'translateY(0%)' }}
-                    className="group relative z-[12] h-[12px] w-[12px] overflow-hidden rounded-[50%] border-[6px] border-red-400 [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease] hover:z-[100] hover:h-[240px] hover:w-[340px] hover:rounded-[4px] hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease]"
+                    className="group relative z-[12] h-[12px] w-[12px] overflow-hidden rounded-[50%] border-[6px] [transition:width_0.4s_ease,height_0.4s_ease,border-radius_0.2s_0.4s_ease,z-index_0s_0.4s_ease] hover:z-[100] hover:h-[240px] hover:w-[340px] hover:rounded-[4px] hover:[transition:width_0.4s_0.2s_ease,height_0.4s_0.2s_ease,border-radius_0.2s_ease]"
                   >
                     <div className="z-[11] h-full w-full bg-slate-800 [&>*:first-child]:overflow-hidden [&>*:first-child]:opacity-0 [&>*:first-child]:transition-opacity [&>*:first-child]:delay-0 [&>*:first-child]:duration-[0.4s] group-hover:[&>*:first-child]:overflow-auto group-hover:[&>*:first-child]:opacity-100 group-hover:[&>*:first-child]:delay-[0.5s]">
                       {point.hoverComponent}

@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React, { ChangeEventHandler, useState } from "react";
 const Search = () => {
+  const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
@@ -53,7 +54,7 @@ const Search = () => {
                   onMouseDown={(e) => {
                     e.stopPropagation();
                     console.log("HITTT");
-                    router.push(`/${actor.id}`);
+                    router.push(`${pathname}/${actor.id}`);
                   }}
                   href={`/${actor.id}`}
                 >
