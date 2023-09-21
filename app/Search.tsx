@@ -4,6 +4,10 @@ import { useRouter, usePathname } from "next/navigation";
 import React, { ChangeEventHandler, useState } from "react";
 const Search = () => {
   const pathname = usePathname();
+  const splitPath = pathname.split("/").filter((seg) => seg);
+  console.log(splitPath);
+  const isDisabled = splitPath.length === 4;
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
@@ -32,7 +36,6 @@ const Search = () => {
       <label className="flex text-slate-700">
         <input
           onBlur={() => {
-            console.log("BLUR");
             setFocused(false);
           }}
           onFocus={() => setFocused(true)}
@@ -53,8 +56,9 @@ const Search = () => {
                   className="flex items-center gap-4 p-2"
                   onMouseDown={(e) => {
                     e.stopPropagation();
-                    console.log("HITTT");
-                    router.push(`${pathname}/${actor.id}`);
+                    console.log(splitPath.join("/"));
+                    router.push(`/${splitPath.join("/")}/${actor.id}`);
+                    // setQuery("");
                   }}
                   href={`/${actor.id}`}
                 >
