@@ -5,7 +5,7 @@ import React, { ChangeEventHandler, useState } from "react";
 const Search = () => {
   const pathname = usePathname();
   const splitPath = pathname.split("/").filter((seg) => seg);
-  console.log(splitPath);
+  // console.log(splitPath);
   const isDisabled = splitPath.length === 4;
 
   const router = useRouter();
@@ -56,9 +56,14 @@ const Search = () => {
                   className="flex items-center gap-4 p-2"
                   onMouseDown={(e) => {
                     e.stopPropagation();
-                    console.log(splitPath.join("/"));
-                    router.push(`/${splitPath.join("/")}/${actor.id}`);
-                    // setQuery("");
+                    if(splitPath.length === 0) {
+                      router.push(`/${actor.id}`)
+                    } else {
+
+                      console.log(splitPath.join("/"));
+                      router.push(`/${splitPath.join("/")}/${actor.id}`);
+                    }
+                    setQuery("");
                   }}
                   href={`/${actor.id}`}
                 >
