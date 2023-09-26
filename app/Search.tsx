@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import React, { ChangeEventHandler, useState } from "react";
+import React, { ChangeEventHandler, useMemo, useState } from "react";
+import debounce from "lodash.debounce";
 const Search = () => {
   const pathname = usePathname();
   const splitPath = pathname.split("/").filter((seg) => seg);
@@ -10,26 +11,22 @@ const Search = () => {
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
+  // const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [focused, setFocused] = useState(false);
 
-  const handleSearchWhileTyping = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setLoading(true);
-    setQuery(event.currentTarget.value);
-    const res = await fetch(`/api/search?query=${event.currentTarget.value}`, {
+  const handleSearchWhileTyping = async (val: string) => {
+    const res = await fetch(`/api/search?query=${val}`, {
       method: "GET",
     });
 
     const actors = await res.json();
 
     setResults(actors.results);
-    setLoading(false);
   };
+  const debouncedSearch = debounce(handleSearchWhileTyping, 500);
 
-  const showResults = results.length > 0 && query.length > 0 && focused;
+  const showResults = results.length > 0 && focused && !loading;
 
   return (
     <div className="relative">
@@ -40,13 +37,20 @@ const Search = () => {
           }}
           onFocus={() => setFocused(true)}
           className="peer order-2 w-80 rounded-r-lg border-4 border-slate-500 bg-slate-300 px-2 py-1 font-semibold outline-none"
-          value={query}
-          onChange={handleSearchWhileTyping}
+          // value={query}
+          onChange={(e) => {
+            debouncedSearch(e.currentTarget.value);
+          }}
         />
         <span className="order-1 w-fit rounded-l-lg border-4 border-r-0 border-slate-500 bg-slate-300 px-2 py-1 font-bold transition-colors peer-focus:bg-slate-500 peer-focus:text-slate-300">
           Search Actor
         </span>
       </label>
+      {loading && (
+        <div className="absolute w-full px-4">
+          <div className="max-h-[600px] w-full bg-red-500">Loading...</div>
+        </div>
+      )}
       {showResults && (
         <div className="absolute  w-full px-4">
           <ul className="m-0 max-h-[600px] w-full list-none overflow-auto rounded-b-lg border-4 border-t-0 border-slate-500 bg-slate-300">
@@ -56,14 +60,13 @@ const Search = () => {
                   className="flex items-center gap-4 p-2"
                   onMouseDown={(e) => {
                     e.stopPropagation();
-                    if(splitPath.length === 0) {
-                      router.push(`/${actor.id}`)
+                    if (splitPath.length === 0) {
+                      router.push(`/${actor.id}`);
                     } else {
-
                       console.log(splitPath.join("/"));
                       router.push(`/${splitPath.join("/")}/${actor.id}`);
                     }
-                    setQuery("");
+                    // setQuery("");
                   }}
                   href={`/${actor.id}`}
                 >
