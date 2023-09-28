@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import React, { ChangeEventHandler, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
+import useDebounce from "@/hooks/useDebounce";
+import Spinner from "@/components/Spinner";
 const Search = () => {
   const pathname = usePathname();
   const splitPath = pathname.split("/").filter((seg) => seg);
@@ -11,7 +13,7 @@ const Search = () => {
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  // const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [focused, setFocused] = useState(false);
 
@@ -23,8 +25,11 @@ const Search = () => {
     const actors = await res.json();
 
     setResults(actors.results);
+    setLoading(false);
   };
-  const debouncedSearch = debounce(handleSearchWhileTyping, 500);
+  const debouncedSearch = useDebounce(() => {
+    handleSearchWhileTyping(query);
+  }, 500);
 
   const showResults = results.length > 0 && focused && !loading;
 
@@ -37,9 +42,11 @@ const Search = () => {
           }}
           onFocus={() => setFocused(true)}
           className="peer order-2 w-80 rounded-r-lg border-4 border-slate-500 bg-slate-300 px-2 py-1 font-semibold outline-none"
-          // value={query}
+          value={query}
           onChange={(e) => {
-            debouncedSearch(e.currentTarget.value);
+            setLoading(true);
+            setQuery(e.target.value);
+            debouncedSearch();
           }}
         />
         <span className="order-1 w-fit rounded-l-lg border-4 border-r-0 border-slate-500 bg-slate-300 px-2 py-1 font-bold transition-colors peer-focus:bg-slate-500 peer-focus:text-slate-300">
@@ -48,7 +55,9 @@ const Search = () => {
       </label>
       {loading && (
         <div className="absolute w-full px-4">
-          <div className="max-h-[600px] w-full bg-red-500">Loading...</div>
+          <div className="grid h-[600px] w-full place-items-center bg-slate-300">
+            <Spinner />
+          </div>
         </div>
       )}
       {showResults && (
