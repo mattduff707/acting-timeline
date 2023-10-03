@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import React, { ChangeEventHandler, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
 import useDebounce from "@/hooks/useDebounce";
 import Spinner from "@/components/Spinner";
 const Search = () => {
