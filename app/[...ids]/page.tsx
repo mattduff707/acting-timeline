@@ -69,10 +69,8 @@ const Actor = async ({ params }: Props) => {
       <Overview actors={actors} />
       <Timeline
         points={points}
-        x={sortedYears}
-        y={ratings}
-        xLabel="Release Date"
-        yLabel="Rating"
+        x={{ values: sortedYears, label: "Release Date" }}
+        y={{ values: ratings, label: "Rating" }}
       />
     </section>
   );

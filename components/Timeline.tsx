@@ -9,33 +9,41 @@ interface Point {
   color: string;
 }
 
-interface Props {
-  y: number[];
-  x: number[];
-  points: Point[];
-  xLabel: string;
-  yLabel: string;
+interface X {
+  label: string;
+  values: number[] | Date[];
+}
+interface Y {
+  label: string;
+  values: number[];
 }
 
-const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
-  const width = `${x.length * 140}px`;
-  const columns = `repeat(${x.length}, minmax(0, 1fr))`;
-  const rows = `repeat(${y.length - 1}, minmax(0, 1fr))`;
+interface Props {
+  x: X;
+  y: Y;
+  points: Point[];
+}
+
+const Timeline = ({ x, y, points }: Props) => {
+  const { label: xLabel, values: xValues } = x;
+  const { label: yLabel, values: yValues } = y;
+
+  const width = `${xValues.length * 140}px`;
+  const columns = `repeat(${xValues.length}, minmax(0, 1fr))`;
+  const rows = `repeat(${yValues.length - 1}, minmax(0, 1fr))`;
 
   const pointsByYear = points.reduce(
     (acc: { [key: number]: { [key: number]: any[] } }, point) => {
       const year = getYear(point.x);
 
-      const idxOfY = y.findIndex((yVal) => point.y <= yVal);
+      const idxOfY = yValues.findIndex((yVal) => point.y <= yVal);
 
       if (idxOfY === -1) {
         console.log("Value omitted: " + point.y);
         return acc;
       }
 
-      const category = idxOfY !== 0 ? y[idxOfY - 1] : y[idxOfY];
-
-      //if idx is 0 then do not subtract
+      const category = idxOfY !== 0 ? yValues[idxOfY - 1] : yValues[idxOfY];
 
       if (!acc[year]) {
         return {
@@ -67,12 +75,12 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
     {},
   );
 
-  const boxes = y
+  const boxes = yValues
     .slice()
     .reverse()
     .map((yVal, yIdx, yArr) => {
       if (yIdx === 0) return null;
-      const xs = x.map((xVal, xIdx, xArr) => {
+      const xs = xValues.map((xVal, xIdx, xArr) => {
         const daysInYear = 365;
         const year = new Date(xVal, 0, 1);
 
@@ -98,8 +106,8 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
 
         const isBorderLeft = xIdx === 0;
         const isBorderTop = yIdx === 0;
-        const isBorderBottom = yIdx === y.length - 1;
-        const isBorderRight = xIdx === x.length - 1;
+        const isBorderBottom = yIdx === yValues.length - 1;
+        const isBorderRight = xIdx === xValues.length - 1;
 
         const borderLeft = isBorderLeft
           ? { style: "solid", width: "0px", color: "rgb(100,116,139)" }
@@ -181,7 +189,7 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
       <div></div>
       <div className="sticky left-0 z-20 border-r-[5px] border-slate-500 bg-slate-800 pr-2">
         <div className="relative h-full">
-          {y
+          {yValues
             .slice()
             .reverse()
             .map((yVal, idx, arr) => {
@@ -210,7 +218,7 @@ const Timeline = ({ x, y, points, xLabel, yLabel }: Props) => {
       <div className="sticky right-0 z-[30] bg-gradient-to-r from-transparent to-slate-800"></div>
       <div className="sticky left-0 z-[13] border-t-8 border-slate-800 bg-gradient-to-r from-slate-800 to-transparent" />
       <div className="relative pt-2">
-        {x.map((xVal, idx, arr) => {
+        {xValues.map((xVal, idx, arr) => {
           const left = `${idx * 140}px`;
           return (
             <div

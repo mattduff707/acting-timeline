@@ -8,9 +8,7 @@ import ActorLink from "@/components/ActorLink";
 const Search = () => {
   const pathname = usePathname();
   const splitPath = pathname.split("/").filter((seg) => seg);
-  // console.log(splitPath);
   const isDisabled = splitPath.length === 4;
-  console.log(isDisabled);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
